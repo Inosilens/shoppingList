@@ -1,14 +1,21 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {IProduct} from "./types";
+import {INotification, IProduct} from "./types";
+
 
 export interface InitialState {
     shoppingList: IProduct[]
     allProducts: IProduct[]
+    notification: INotification
 }
 
 export const mainInitialState: InitialState = {
     shoppingList: [],
-    allProducts: []
+    allProducts: [],
+    notification: {
+        show: false,
+        text: '',
+        type: ''
+    }
 };
 
 export const mainSlice = createSlice({
@@ -28,8 +35,14 @@ export const mainSlice = createSlice({
         },
         removeProduct(state, action) {
             state.allProducts = state.allProducts.filter(item => item.id !== action.payload)
+        },
+        showNotification(state, action) {
+            state.notification = {show: true, text: action.payload.text, type: action.payload.type}
+        },
+        hideNotification(state) {
+            state.notification = {show: false, text: '', type: ''}
         }
     }
 });
-export const {buyProduct, addProduct, addToBasket, removeProduct} = mainSlice.actions;
+export const {buyProduct, addProduct, addToBasket, removeProduct, showNotification, hideNotification} = mainSlice.actions;
 export default mainSlice.reducer;

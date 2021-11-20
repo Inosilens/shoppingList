@@ -5,7 +5,7 @@ import {Button} from "../../components/button/button";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
 import {List} from "./components/list/list";
 import {IProduct} from "./types";
-import {addProduct, addToBasket, buyProduct, removeProduct} from "./main-slice";
+import {addProduct, addToBasket, buyProduct, removeProduct, showNotification, hideNotification} from "./main-slice";
 import './main.sass'
 import {Notification} from "../../components/notification/notification";
 
@@ -15,53 +15,43 @@ const Main = () => {
         id: 0, img: undefined, optionalTittle: "", price: "", tittle: ""
     })
     const [createMode, setCreateMode] = useState<boolean>(false)
-    const [notification, setNotification] = useState<boolean>(false)
-    const [notificationText, setNotificationText] = useState<string>('')
-    const [notificationType, setNotificationType] = useState<string>('')
     const dispatch = useAppDispatch();
 
     const createProduct = () => {
         dispatch(addProduct(newProduct))
         setNewProduct({id: 0, img: undefined, optionalTittle: "", price: "", tittle: ""})
         setCreateMode(false)
-        setNotification(true)
-        setNotificationText('Продукт успешно создан')
-        setNotificationType('createProduct')
+        dispatch(showNotification({text: 'Продукт успешно создан', type: 'createProduct'}))
         setTimeout(() => {
-            setNotification(false)
-        }, 3000)
+            dispatch(hideNotification())
+        }, 4000)
     }
 
     const addToBasketProduct = (id: number) => {
         dispatch(addToBasket(id))
-        setNotification(true)
-        setNotificationText('Продукт добавлен в корзину')
-        setNotificationType('addToBasket')
+        dispatch(showNotification({text: 'Продукт добавлен в корзину', type: 'addToBasket'}))
         setTimeout(() => {
-            setNotification(false)
+            dispatch(hideNotification())
         }, 4000)
 
     }
 
     const removeProductOnList = (id: number) => {
         dispatch(removeProduct(id))
-        setNotification(true)
-        setNotificationText('Продукт удален')
-        setNotificationType('removeProduct')
+        dispatch(showNotification({text: 'Продукт удален', type: 'removeProduct'}))
         setTimeout(() => {
-            setNotification(false)
+            dispatch(hideNotification())
         }, 4000)
     }
 
     const removeOnBasket = (id: number) => {
         dispatch(buyProduct(id))
-        setNotification(true)
-        setNotificationText('Продукт удален из списка покупок')
-        setNotificationType('removeProduct')
+        dispatch(showNotification({text: 'Продукт удален из списка покупок', type: 'removeProduct'}))
         setTimeout(() => {
-            setNotification(false)
+            dispatch(hideNotification())
         }, 4000)
     }
+
     const getProductImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         let file = e.currentTarget.files![0]
         let reader = new FileReader();
@@ -73,6 +63,7 @@ const Main = () => {
         };
         reader.readAsDataURL(file);
     }
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         setNewProduct((prevState) => ({
@@ -84,10 +75,7 @@ const Main = () => {
 
     return (
         <>
-            {notification &&
-            <Notification notificationType={notificationType} notificationText={notificationText}
-                          notificationShow={notification}/>
-            }
+            <Notification/>
             <div className={'header'}>
                 <Button onSubmit={() => setCreateMode(true)} type={'create'} text={'Cоздать продукт'}/>
             </div>
@@ -108,7 +96,7 @@ const Main = () => {
                    onSubmit={() => createProduct()}
                    onDisagree={() => setCreateMode(false)}
                    textDisagree={'Отмена'} textSubmit={'Сохранить'}
-                   disabled={!newProduct.tittle.length || !newProduct.price.length }
+                   disabled={!newProduct.tittle.length || !newProduct.price.length}
             >
                 <label>Название продукта</label>
                 <Field value={newProduct.tittle}
