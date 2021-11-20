@@ -10,7 +10,7 @@ import './main.sass'
 import {Notification} from "../../components/notification/notification";
 
 const Main = () => {
-    const {shoppingList, allProducts} = useAppSelector(state => state.main)
+    const {shoppingList, allProducts, notification} = useAppSelector(state => state.main)
     const [newProduct, setNewProduct] = useState<IProduct>({
         id: 0, img: undefined, optionalTittle: "", price: "", tittle: ""
     })
@@ -75,9 +75,13 @@ const Main = () => {
 
     return (
         <>
-            <Notification/>
+            <Notification notificationType={notification.type}
+                          notificationText={notification.text}
+                          notificationShow={notification.show}/>
             <div className={'header'}>
-                <Button onSubmit={() => setCreateMode(true)} type={'create'} text={'Cоздать продукт'}/>
+                <Button onSubmit={() => setCreateMode(true)}
+                        type={'create'}
+                        text={'Cоздать продукт'}/>
             </div>
             <div className={'listBlock'}>
                 <List tittle={'Продукты'}
@@ -96,7 +100,7 @@ const Main = () => {
                    onSubmit={() => createProduct()}
                    onDisagree={() => setCreateMode(false)}
                    textDisagree={'Отмена'} textSubmit={'Сохранить'}
-                   disabled={!newProduct.tittle.length || !newProduct.price.length}
+                   disabled={!newProduct.tittle.length || !newProduct.price.length || !newProduct.img}
             >
                 <label>Название продукта</label>
                 <Field value={newProduct.tittle}
