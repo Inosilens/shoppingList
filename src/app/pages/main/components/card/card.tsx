@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {IProduct} from "../../types";
 import './card.sass'
 
@@ -6,7 +6,7 @@ interface Props {
     item: IProduct
 }
 
-export const Card = React.memo(({item}: Props) => {
+export const Card: FC<Props> = React.memo(({item}) => {
         return (
             <div className={'card'}>
                 <div className="tittle">

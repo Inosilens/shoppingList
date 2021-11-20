@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {IProduct} from "../../types";
 import {Card} from "../card/card";
 import {Button} from "../../../../components/button/button";
@@ -14,7 +14,7 @@ interface Props {
 }
 
 
-export const List = React.memo(({list, tittle, buttonText, buttonClick, removeItem, removeText}: Props) => {
+export const List: FC<Props> = React.memo(({list, tittle, buttonText, buttonClick, removeItem, removeText}) => {
         return (
             <div className={'list'}>
                 <h1>{tittle}</h1>
@@ -22,11 +22,11 @@ export const List = React.memo(({list, tittle, buttonText, buttonClick, removeIt
                     list.map(item =>
                         <div className={'itemCard'} key={item.id}>
                             <Card item={item}/>
-                                {removeItem && removeText &&
-                                <Button removeText={removeText} remove={() => removeItem(item.id)}/>
-                                }
-                                {buttonClick && buttonText &&
-                                <Button onSubmit={() => buttonClick(item.id)} text={buttonText}/>}
+                            {removeItem && removeText &&
+                            <Button removeText={removeText} remove={() => removeItem(item.id)}/>
+                            }
+                            {buttonClick && buttonText &&
+                            <Button onSubmit={() => buttonClick(item.id)} text={buttonText}/>}
                         </div>
                     )
                 }

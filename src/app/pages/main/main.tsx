@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FC, useState} from 'react';
 import {Modal} from "../../components/modal/modal";
 import {Field} from "../../components/filed/filed";
 import {Button} from "../../components/button/button";
@@ -9,13 +9,17 @@ import {addProduct, addToBasket, buyProduct, removeProduct, showNotification, hi
 import './main.sass'
 import {Notification} from "../../components/notification/notification";
 
-const Main = () => {
+const Main: FC = () => {
     const {shoppingList, allProducts, notification} = useAppSelector(state => state.main)
     const [newProduct, setNewProduct] = useState<IProduct>({
         id: 0, img: undefined, optionalTittle: "", price: "", tittle: ""
     })
     const [createMode, setCreateMode] = useState<boolean>(false)
     const dispatch = useAppDispatch();
+
+    const dispatchEvent = (id: number, type: string) => {
+
+    }
 
     const createProduct = () => {
         dispatch(addProduct(newProduct))

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {FC} from 'react';
 import './notification.sass'
 import {useAppSelector} from "../../hooks/redux-hooks";
 
@@ -8,7 +8,7 @@ interface Props {
     notificationShow: boolean
 }
 
-export const Notification = React.memo(({notificationText, notificationType, notificationShow}: Props) => {
+export const Notification: FC<Props> = React.memo(({notificationText, notificationType, notificationShow}) => {
         const {notification} = useAppSelector(state => state.main)
         return (
             <div className={notificationShow ? 'wrapper' : ''}>

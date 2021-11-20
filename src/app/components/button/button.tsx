@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import './button.sass'
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 }
 
 
-export const Button = React.memo(({text, onSubmit, disabled, type, removeText, remove}: Props) => {
+export const Button: FC<Props> = React.memo(({text, onSubmit, disabled, type, removeText, remove}) => {
         return (
             <button className={type} onClick={onSubmit ? onSubmit : remove} disabled={disabled}>
                 {text}{removeText}

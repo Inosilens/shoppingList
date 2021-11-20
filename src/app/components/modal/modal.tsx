@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import './modal.sass'
 import {Button} from "../button/button";
 
@@ -13,7 +13,7 @@ interface Props {
     disabled?: boolean
 }
 
-export const Modal = React.memo(({
+export const Modal: FC<Props> = React.memo(({
                                      tittle,
                                      children,
                                      onSubmit,
@@ -21,7 +21,7 @@ export const Modal = React.memo(({
                                      textSubmit,
                                      textDisagree,
                                      disabled
-                                 }: Props) => {
+                                 }) => {
         return (
             <div className={'modalWrapper'}>
                 <div className={'window'}>

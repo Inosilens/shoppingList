@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 interface Props {
     type?: string,
@@ -8,7 +8,7 @@ interface Props {
     name?:string
 }
 
-export const Field = React.memo(({onChange, type, value, placeholder, name}: Props) => {
+export const Field: FC<Props> = React.memo(({onChange, type, value, placeholder, name}) => {
         return (
             <input name={name} className={'field'} onChange={onChange} type={type} value={value} placeholder={placeholder}>
             </input>
