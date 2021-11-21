@@ -5,9 +5,13 @@ import {Button} from "../../components/button/button";
 import {useAppDispatch, useAppSelector} from "../../hooks/redux-hooks";
 import {List} from "./components/list/list";
 import {IProduct} from "./types";
-import {addProduct, addToBasket, buyProduct, removeProduct, showNotification, hideNotification} from "./main-slice";
+import {addProduct, addToBasket, buyProduct, removeProduct, hideNotification} from "./main-slice";
 import './main.sass'
 import {Notification} from "../../components/notification/notification";
+
+type dispatchEventOptions = {
+    [key: string]: any
+}
 
 const Main: FC = () => {
     const {shoppingList, allProducts, notification} = useAppSelector(state => state.main)
@@ -17,43 +21,26 @@ const Main: FC = () => {
     const [createMode, setCreateMode] = useState<boolean>(false)
     const dispatch = useAppDispatch();
 
-    const dispatchEvent = (id: number, type: string) => {
-
-    }
-
     const createProduct = () => {
         dispatch(addProduct(newProduct))
         setNewProduct({id: 0, img: undefined, optionalTittle: "", price: "", tittle: ""})
         setCreateMode(false)
-        dispatch(showNotification({text: 'Продукт успешно создан', type: 'createProduct'}))
         setTimeout(() => {
             dispatch(hideNotification())
         }, 4000)
     }
 
-    const addToBasketProduct = (id: number) => {
-        dispatch(addToBasket(id))
-        dispatch(showNotification({text: 'Продукт добавлен в корзину', type: 'addToBasket'}))
+    const productEvent = (id: number, type: keyof typeof switchEvent) => {
+        const switchEvent: dispatchEventOptions = {
+            'addToBasket': addToBasket(id),
+            'removeProductOnList': removeProduct(id),
+            'removeOnBasket': buyProduct(id),
+        }
+        dispatch(switchEvent[type])
         setTimeout(() => {
-            dispatch(hideNotification())
-        }, 4000)
+                dispatch(hideNotification())
+            }, 4000)
 
-    }
-
-    const removeProductOnList = (id: number) => {
-        dispatch(removeProduct(id))
-        dispatch(showNotification({text: 'Продукт удален', type: 'removeProduct'}))
-        setTimeout(() => {
-            dispatch(hideNotification())
-        }, 4000)
-    }
-
-    const removeOnBasket = (id: number) => {
-        dispatch(buyProduct(id))
-        dispatch(showNotification({text: 'Продукт удален из списка покупок', type: 'removeProduct'}))
-        setTimeout(() => {
-            dispatch(hideNotification())
-        }, 4000)
     }
 
     const getProductImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,13 +77,13 @@ const Main: FC = () => {
             <div className={'listBlock'}>
                 <List tittle={'Продукты'}
                       list={allProducts}
-                      buttonClick={(id) => addToBasketProduct(id)}
+                      buttonClick={(id) => productEvent(id, 'addToBasket')}
                       removeText={'Удалить продукт'}
-                      removeItem={(id) => removeProductOnList(id)}
+                      removeItem={(id) => productEvent(id, 'removeProductOnList')}
                       buttonText={'Добавить в список покупок'}/>
                 <List tittle={'Список покупок'}
                       list={shoppingList}
-                      buttonClick={(id) => removeOnBasket(id)}
+                      buttonClick={(id) => productEvent(id, 'removeOnBasket')}
                       buttonText={'Купить'}/>
             </div>
             {createMode &&

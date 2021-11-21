@@ -25,24 +25,25 @@ export const mainSlice = createSlice({
         buyProduct(state, action) {
             state.shoppingList.forEach(item => item.id === action.payload ? state.allProducts.push(item) : null)
             state.shoppingList = state.shoppingList.filter(item => item.id !== action.payload)
+            state.notification = {show: true, text: 'Продукт удален из списка покупок', type: 'removeProduct'}
         },
         addProduct(state, action) {
             state.allProducts.push(action.payload)
+            state.notification = {show: true, text: 'Продукт успешно создан', type: 'createProduct'}
         },
         addToBasket(state, action) {
             state.allProducts.forEach(item => item.id === action.payload ? state.shoppingList.push(item) : null)
             state.allProducts = state.allProducts.filter(item => item.id !== action.payload)
+            state.notification = {show: true, text: 'Продукт добавлен в корзину', type: 'addToBasket'}
         },
         removeProduct(state, action) {
             state.allProducts = state.allProducts.filter(item => item.id !== action.payload)
-        },
-        showNotification(state, action) {
-            state.notification = {show: true, text: action.payload.text, type: action.payload.type}
+            state.notification = {show: true, text: 'Продукт удален', type: 'removeProduct'}
         },
         hideNotification(state) {
             state.notification = {show: false, text: '', type: ''}
         }
     }
 });
-export const {buyProduct, addProduct, addToBasket, removeProduct, showNotification, hideNotification} = mainSlice.actions;
+export const {buyProduct, addProduct, addToBasket, removeProduct, hideNotification} = mainSlice.actions;
 export default mainSlice.reducer;
